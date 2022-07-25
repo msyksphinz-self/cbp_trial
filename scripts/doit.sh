@@ -11,21 +11,23 @@ num_parallel_jobs=8
 
 ###########  HOW TO RUN JOBS?  ################
 
-# The following line will launch sims for all workloads when you run ./doit.sh (comment it if you dont want it to) 
+# The following line will launch sims for all workloads when you run ./doit.sh (comment it if you dont want it to)
 
 # ./runall.pl -s ../sim/predictor -w all -f  $num_parallel_jobs -d ../results/SEZNEC2014.08KB
 
-./runall.pl -s ../sim/predictor -w random -f  $num_parallel_jobs -d ../results/new_traces
+# ./runall.pl -s ../sim/predictor -w random -f  $num_parallel_jobs -d ../results/new_traces
 
+./runall.pl -s ../sim/predictor -w temp -f  $num_parallel_jobs -d ../results/bimodal
 
 ###########  HOW TO GET STATS?  ################
 
 # This scripts creates stats, after all the earlier jobs finish
 
-./getdata.pl -w random -d ../results/new_traces
+./getdata.pl -w temp -d ../results/bimodal
+
 #./getdata.pl -w all -d ../results/SEZNEC2014.08KB
 
-# To compare MPKI numbers against GSHARE for the provided benchmarks , uncomment this line 
+# To compare MPKI numbers against GSHARE for the provided benchmarks , uncomment this line
 # ./getdata.pl -w all -d ../results/MYRESULTS ../results/GSHARE.04KB  ../results/GSHARE.08KB ../results/GSHARE.16KB ../results/GSHARE.32KB
 
 
