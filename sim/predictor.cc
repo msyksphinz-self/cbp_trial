@@ -20,7 +20,7 @@ printf("  \nTAGE_MPKI   \t : %10.4f",   1000.0*(double)(XX)/NUMINST);
 printf("  \nCOLT_MPKI    \t : %10.4f",   1000.0*(double)(ZZ)/NUMINST);
 printf("  \nNEURAL_MPKI    \t : %10.4f",   1000.0*(double)(YY)/NUMINST);
 printf("  \nSC_MPKI    \t : %10.4f",   1000.0*(double)(TT)/NUMINST);
-                   
+
           //    printf("  XX %d YY %d ZZ %d TT %d",XX,YY,ZZ,TT);
  }
 
@@ -33,7 +33,7 @@ bool pred_inter;
 
 
 
-#define IMLI //just to be able to isolate IMLI impact: marginal on CBP5 traces 
+#define IMLI //just to be able to isolate IMLI impact: marginal on CBP5 traces
 
 #define PERCWIDTH 8
 #define GPSTEP 6
@@ -83,14 +83,14 @@ long long L_shist[NLOCAL] = { 0 };
 
 #define LNB 15
 int Lm[LNB] = { 2, 4, 6, 9, 12, 16, 20, 24, 29, 34, 39, 44, 50, 56, 63 };
-int8_t LGEHLA[LNB][TABSIZE]; 
+int8_t LGEHLA[LNB][TABSIZE];
 int8_t *LGEHL[LNB] = { 0 };
 
 //Local history  +IMLI
 #define LINB 10
 int LIm[LNB] = { 18, 20, 24, 29, 34, 39, 44, 50, 56, 63 };
 
-int8_t LIGEHLA[LNB][TABSIZE]; 
+int8_t LIGEHLA[LNB][TABSIZE];
 int8_t *LIGEHL[LNB] = { 0 };
 
 #define  LOGSECLOCAL 4
@@ -101,7 +101,7 @@ long long S_slhist[NSECLOCAL] = { 0 };
 
 #define SNB 15
 int Sm[SNB] = { 2, 4, 6, 9, 12, 16, 20, 24, 29, 34, 39, 44, 50, 56, 63 };
-int8_t SGEHLA[SNB][TABSIZE]; 
+int8_t SGEHLA[SNB][TABSIZE];
 int8_t *SGEHL[SNB] = { 0 };
 
 #define  LOGTLOCAL 4
@@ -111,13 +111,13 @@ long long T_slhist[NTLOCAL] = { 0 };
 
 #define TNB 15
 int Tm[TNB] = { 2, 4, 6, 9, 12, 16, 20, 24, 29, 34, 39, 44, 50, 56, 63 };
-int8_t TGEHLA[TNB][TABSIZE]; 
+int8_t TGEHLA[TNB][TABSIZE];
 int8_t *TGEHL[TNB] = { 0 };
 
 #define QPSTEP 6
 #define QWIDTH 60
 #define LOGSIZEQ (LOGSIZE)
-int8_t PERCQLOC[(1 << LOGSIZEQ)][10 * (1 << QPSTEP)]; 
+int8_t PERCQLOC[(1 << LOGSIZEQ)][10 * (1 << QPSTEP)];
 
 #define  LOGQLOCAL 15
 #define NQLOCAL (1<<LOGQLOCAL)
@@ -126,7 +126,7 @@ long long Q_slhist[NQLOCAL] = { 0 };
 
 #define QNB 15
 int Qm[QNB] = { 2, 4, 6, 9, 12, 16, 20, 24, 29, 34, 39, 44, 50, 56, 63 };
-int8_t QGEHLA[QNB][TABSIZE]; 
+int8_t QGEHLA[QNB][TABSIZE];
 int8_t *QGEHL[QNB] = { 0 };
 
 // correlation at constant local history ? (without PC)
@@ -146,16 +146,16 @@ long long IMLIhist[NTIMLI] = { 0 };
 #define IMLINB 15
 int IMLIm[IMLINB] =
   { 2, 4, 6, 9, 12, 16, 20, 24, 29, 34, 39, 44, 50, 56, 63 };
-int8_t IMLIGEHLA[IMLINB][TABSIZE]; 
+int8_t IMLIGEHLA[IMLINB][TABSIZE];
 int8_t *IMLIGEHL[IMLINB] = { 0 };
 
 
 
-//about the skeleton histories: see CBP4 
+//about the skeleton histories: see CBP4
 #define YNB 15
 int Ym[SNB] = { 2, 4, 6, 9, 12, 16, 20, 24, 29, 34, 39, 44, 50, 56, 63 };
 
-int8_t YGEHLA[SNB][TABSIZE]; 
+int8_t YGEHLA[SNB][TABSIZE];
 int8_t *YGEHL[SNB] = { 0 };
 
 long long YHA = 0;
@@ -226,7 +226,7 @@ int Pupdatethreshold[(1 << LOGSIZE)] = { 0 };
 int updatethreshold;
 
 
-//the GEHL predictor 
+//the GEHL predictor
 #define MAXNHISTGEHL 209	//inherited from CBP4
 #ifndef LOGGEHL
 // base 2 logarithm of number of entries  on each GEHL  component
@@ -788,7 +788,7 @@ tage::postp_index ()
   v = (v << 1) | u0;
   v &= postpsize - 1;
   VAL = v;
-  
+
   return v;
 }
 
@@ -860,12 +860,12 @@ tage::aggressive_update (UINT64 pc, bool taken, subpath & p)
       int start = 1;
       bool Done = false;
       bool STOP = false;
-      
+
       if (getg (hit[0]).u == 0)
 	{
 	  if (hit.size () > 1)
           { if ((getg (hit[1]).ctr>=0)!=inter) STOP = true;
-               
+
 	      start = 2;
 	      allsat &= ctrupdate (getg (hit[1]).ctr, taken, ctrbits);
 	    }
@@ -1088,7 +1088,7 @@ PREDICTOR::GetPrediction (UINT64 PC)
   subp[3] = &sp[3].p[(PC >> P3_PARAM) % P3_SPSIZE];	// another per-set subpath
   int f = bfreq.find (bft.getfreq (PC));
   ASSERT ((f >= 0) && (f < P4_SPSIZE));
-  subp[4] = &sp[4].p[f];	// frequency subpath 
+  subp[4] = &sp[4].p[f];	// frequency subpath
   subp[5] = &sp[5].p[0];//global backward path
 
   for (int i = 0; i < NPRED; i++)
@@ -1144,7 +1144,7 @@ PREDICTOR::GetPrediction (UINT64 PC)
   predSC = SCpredict (PC, pred_inter);
   bool finalpred = predSC;
 
-  
+
   finalpred = FinalSCpredict (PC, pred_inter);
   return finalpred;
 }
@@ -1158,13 +1158,13 @@ PREDICTOR::UpdatePredictor (UINT64 PC, OpType OPTYPE, bool resolveDir,
 			    bool predDir, UINT64 branchTarget)
 {
 
-  
+
 
   XX+= (predtaken[0]!=resolveDir);
   YY+= (pred_inter !=resolveDir);
-  ZZ+= (COPRED!=resolveDir);  
+  ZZ+= (COPRED!=resolveDir);
   TT+= (predSC!=resolveDir);
-  
+
 //the TAGE stage
 UINT64 ForUpdate = (resolveDir) ? (branchTarget << 1) ^ PC : PC;
   for (int i = 0; i < NPRED - 1; i++)
@@ -1177,7 +1177,7 @@ if (branchTarget < PC)
     subp[NPRED - 1]->update (ForUpdate, ((branchTarget < PC) & resolveDir));
  bfreq.update (bft.getfreq (PC));
   bft.getfreq (PC)++;
-  
+
 //update of the TAGE combiner
 
   if ((abs (FirstSum) < FirstThreshold) || (pred_inter != resolveDir))
@@ -1213,12 +1213,12 @@ if (branchTarget < PC)
 
 // The final stage
   UpdateFinalSC (PC, resolveDir);
-  
 
- 
+
+
 
   HistoryUpdate (PC, 1, resolveDir, branchTarget, ptghist, chgehl_i, chrhsp_i);
-  
+
 
 
 }
@@ -1459,7 +1459,7 @@ PREDICTOR::initSC ()
       }
 
 
-  
+
   for (int j = 0; j < (1 << LOGBIAS); j++)
     Bias[j] = (j & 1) ? 15 : -16;
 
@@ -1536,10 +1536,10 @@ PREDICTOR::initSC ()
 void
 PREDICTOR::HistoryUpdate (UINT64 PC, uint8_t brtype, bool taken,
 			  UINT64 target, int &Y, folded_history * K,
-  
+
 			  folded_history * L)
 {
-     
+
 #define OPTYPE_BRANCH_COND 1
   // History skeleton
   bool V = false;
@@ -1562,9 +1562,9 @@ PREDICTOR::HistoryUpdate (UINT64 PC, uint8_t brtype, bool taken,
 
   if (brtype == OPTYPE_BRANCH_COND)
     {
-         
 
-// local history 
+
+// local history
       L_shist[INDLOCAL] = (L_shist[INDLOCAL] << 1) + (taken);
       Q_slhist[INDQLOCAL]= (Q_slhist[INDQLOCAL] << 1) + (taken);
       S_slhist[INDSLOCAL] = (S_slhist[INDSLOCAL]<< 1) + (taken);
@@ -1589,7 +1589,7 @@ PREDICTOR::HistoryUpdate (UINT64 PC, uint8_t brtype, bool taken,
       BHIST = (BHIST << 1) ^ (PC & 15);
     }
   lastaddr = PC;
-//IMLI related 
+//IMLI related
   if (brtype == OPTYPE_BRANCH_COND)
     if (target < PC)
       {
@@ -1632,7 +1632,7 @@ PREDICTOR::HistoryUpdate (UINT64 PC, uint8_t brtype, bool taken,
   Y--;
   ghist[Y & (HISTBUFFERLENGTH - 1)] = DIR;
 
-  //prepare next index and tag computations 
+  //prepare next index and tag computations
   for (int i = 1; i <= NGEHL; i++)
     {
       K[i].update (ghist, Y);
@@ -1865,7 +1865,7 @@ PREDICTOR::SCpredict (UINT64 PC, bool PRED)
 void
 PREDICTOR::predict_gehl (UINT64 PC)
 {
-  //index computation     
+  //index computation
   for (int i = 1; i <= NGEHL; i++)
     {
       GEHLINDEX[i] = gehlindex (PC, i);
@@ -1893,7 +1893,7 @@ PREDICTOR::gehlupdate (UINT64 PC, bool taken)
 void
 PREDICTOR::predict_rhsp (UINT64 PC)
 {
-  //index computation     
+  //index computation
   for (int i = 1; i <= NRHSP; i++)
     {
       RHSPINDEX[i] = rhspindex (PC, i);

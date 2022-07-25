@@ -34,19 +34,19 @@ class PREDICTOR{
   UINT32  ghr;           // global history register
   UINT32  *pht;          // pattern history table
   UINT32  historyLength; // history length
-  UINT32  numPhtEntries; // entries in pht 
+  UINT32  numPhtEntries; // entries in pht
 
  public:
 
 
   PREDICTOR(void);
   //NOTE contestants are NOT allowed to use these versions of the functions
-//ver2   bool    GetPrediction(UINT64 PC, bool btbANSF, bool btbATSF, bool btbDYN);  
+//ver2   bool    GetPrediction(UINT64 PC, bool btbANSF, bool btbATSF, bool btbDYN);
 //ver2   void    UpdatePredictor(UINT64 PC, OpType opType, bool resolveDir, bool predDir, UINT64 branchTarget, bool btbANSF, bool btbATSF, bool btbDYN);
 //ver2   void    TrackOtherInst(UINT64 PC, OpType opType, bool branchDir, UINT64 branchTarget);
 
   // The interface to the functions below CAN NOT be changed
-  bool    GetPrediction(UINT64 PC);  
+  bool    GetPrediction(UINT64 PC);
   void    UpdatePredictor(UINT64 PC, OpType opType, bool resolveDir, bool predDir, UINT64 branchTarget);
   void    TrackOtherInst(UINT64 PC, OpType opType, bool branchDir, UINT64 branchTarget);
 
@@ -55,7 +55,7 @@ class PREDICTOR{
 
 /////////////// STORAGE BUDGET JUSTIFICATION ////////////////
 // Total storage budget: 32KB + 17 bits
-// Total PHT counters: 2^17 
+// Total PHT counters: 2^17
 // Total PHT size = 2^17 * 2 bits/counter = 2^18 bits = 32KB
 // GHR size: 17 bits
 // Total Size = PHT size + GHR size
@@ -75,9 +75,9 @@ PREDICTOR::PREDICTOR(void){
   pht = new UINT32[numPhtEntries];
 
   for(UINT32 ii=0; ii< numPhtEntries; ii++){
-    pht[ii]=PHT_CTR_INIT; 
+    pht[ii]=PHT_CTR_INIT;
   }
-  
+
 }
 
 /////////////////////////////////////////////////////////////
@@ -85,12 +85,12 @@ PREDICTOR::PREDICTOR(void){
 
 //ver2 version of infrastructure. Contestants are NOT allowed to use this version of the function
 //ver2 bool   PREDICTOR::GetPrediction(UINT64 PC, bool btbANSF, bool btbATSF, bool btbDYN){
-//ver2 
+//ver2
 //ver2   UINT32 phtIndex   = (PC^ghr) % (numPhtEntries);
 //ver2   UINT32 phtCounter = pht[phtIndex];
-//ver2 
+//ver2
 //ver2 //  printf(" ghr: %x index: %x counter: %d prediction: %d\n", ghr, phtIndex, phtCounter, phtCounter > PHT_CTR_MAX/2);
-//ver2 
+//ver2
 //ver2   //NOTE taking advantage of btbANFS and btbATSF to make static predictions based upon previously observed behaviour. You don't have to take advantage of this if you don't want to.
 //ver2   if(btbANSF && FILTER_PREDICTIONS_USING_BTB) {
 //ver2     return NOT_TAKEN; //statically predict N if it has always been N since discovery if BTB prediction filtering is enabled
@@ -99,16 +99,16 @@ PREDICTOR::PREDICTOR(void){
 //ver2     return TAKEN; //statically predict T if it has always been T since discovery if BTB prediction filtering is enabled
 //ver2   }
 //ver2   else if (btbDYN || !FILTER_PREDICTIONS_USING_BTB) { //use PHT if it is marked as dynamic in the btb
-//ver2     if(phtCounter > (PHT_CTR_MAX/2)){ 
-//ver2       return TAKEN; 
+//ver2     if(phtCounter > (PHT_CTR_MAX/2)){
+//ver2       return TAKEN;
 //ver2     }
 //ver2     else{
-//ver2       return NOT_TAKEN; 
+//ver2       return NOT_TAKEN;
 //ver2     }
 //ver2   }
-//ver2 
+//ver2
 //ver2   //statically predict N if is not marked at all in the btb
-//ver2   return NOT_TAKEN; 
+//ver2   return NOT_TAKEN;
 //ver2 }
 
 //NOTE contestants are not allowed to use the btb* information from ver2 of the simulation infrastructure. Interface to this function CAN NOT be changed.
@@ -119,11 +119,11 @@ bool   PREDICTOR::GetPrediction(UINT64 PC){
 
 //  printf(" ghr: %x index: %x counter: %d prediction: %d\n", ghr, phtIndex, phtCounter, phtCounter > PHT_CTR_MAX/2);
 
-  if(phtCounter > (PHT_CTR_MAX/2)){ 
-    return TAKEN; 
+  if(phtCounter > (PHT_CTR_MAX/2)){
+    return TAKEN;
   }
   else{
-    return NOT_TAKEN; 
+    return NOT_TAKEN;
   }
 }
 
@@ -133,28 +133,28 @@ bool   PREDICTOR::GetPrediction(UINT64 PC){
 
 //ver2 version of infrastructure. Contestants are NOT allowed to use this version of the function
 //ver2 void  PREDICTOR::UpdatePredictor(UINT64 PC, OpType opType, bool resolveDir, bool predDir, UINT64 branchTarget, bool btbANSF, bool btbATSF, bool btbDYN){
-//ver2 
+//ver2
 //ver2   UINT32 phtIndex   = (PC^ghr) % (numPhtEntries);
 //ver2   UINT32 phtCounter = pht[phtIndex];
-//ver2 
+//ver2
 //ver2   //NOTE only updating PHT and GHR if branch has exhibited dynamic behaviour in the past OR has always been taken until the current not-taken. This is optional, just showing what you could do with this info
-//ver2 
-//ver2   if(btbDYN || (resolveDir != predDir) || !FILTER_UPDATES_USING_BTB) { 
+//ver2
+//ver2   if(btbDYN || (resolveDir != predDir) || !FILTER_UPDATES_USING_BTB) {
 //ver2   // update the PHT if btb indicates dynamic behaviour OR the outcome does not match the prediction
 //ver2     if(resolveDir == TAKEN){
 //ver2       pht[phtIndex] = SatIncrement(phtCounter, PHT_CTR_MAX);
 //ver2     }else{
 //ver2       pht[phtIndex] = SatDecrement(phtCounter);
 //ver2     }
-//ver2 
+//ver2
 //ver2   // update the GHR
 //ver2     ghr = (ghr << 1);
-//ver2 
+//ver2
 //ver2     if(resolveDir == TAKEN){
-//ver2       ghr++; 
+//ver2       ghr++;
 //ver2     }
 //ver2   }
-//ver2 
+//ver2
 //ver2 }
 
 //NOTE contestants are not allowed to use the btb* information from ver2 of the simulation infrastructure. Interface to this function CAN NOT be changed.
@@ -173,7 +173,7 @@ void  PREDICTOR::UpdatePredictor(UINT64 PC, OpType opType, bool resolveDir, bool
   ghr = (ghr << 1);
 
   if(resolveDir == TAKEN){
-    ghr++; 
+    ghr++;
   }
 }
 
@@ -196,4 +196,3 @@ void    PREDICTOR::TrackOtherInst(UINT64 PC, OpType opType, bool branchDir, UINT
 
 /***********************************************************/
 #endif
-
