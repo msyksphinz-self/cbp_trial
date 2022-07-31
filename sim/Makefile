@@ -54,6 +54,7 @@ CPPFLAGS := -O3 -Wall -std=c++11 -Wextra -Winline -Winit-self -Wno-sequence-poin
 PROGRAMS := predictor
 
 # objects = predictor.o main.o
+# objects = piecewise_linear_branch_predictor.o main.o
 objects = main.o
 
 all: $(PROGRAMS)

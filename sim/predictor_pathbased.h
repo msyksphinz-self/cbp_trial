@@ -92,11 +92,13 @@ class PREDICTOR
     int temp = r[LEN_GHR] + weights[PC][0];
     m_temp = temp;
 
-    for (int i = LEN_GHR; i >= 1; i--) {
+    // for (int i = LEN_GHR; i >= 1; i--) {
+    for (int j = 1; j <= LEN_GHR; j++) {
+      int kj = LEN_GHR - j;
       if (temp >= 0) {
-        r[i] = r[i-1] + weights[PC][i-1];
+        r[kj+1] = r[kj] + weights[PC][j];
       } else {
-        r[i] = r[i-1] - weights[PC][i-1];
+        r[kj+1] = r[kj] - weights[PC][j];
       }
     }
     r[0] = 0;
@@ -117,30 +119,25 @@ class PREDICTOR
     int temp = m_temp;
     assert(predDir == (temp >= 0));
 
-    if(temp < 0)
-      { temp = -temp; }   // temp = absolute(temp)
-
-    assert(temp >= 0);      // absolute(temp) must be positive.
-
-    if((temp <= THETA) || (resolveDir != predDir)) {
+    if((abs(temp) <= THETA) || (resolveDir != predDir)) {
       if (resolveDir) {
         weights[PC][0] = sat_incr(weights[PC][0]);
       } else {
         weights[PC][0] = sat_decr(weights[PC][0]);
       }
 
-      for(int i = 1; i <= LEN_GHR; i++) {
-        int k = v[i];
-        if(resolveDir == ghr[i]) {
-          weights[k][i] = sat_incr(weights[k][i]);
+      for(int j = 1; j <= LEN_GHR; j++) {
+        int k = v[j];
+        if(resolveDir == ghr[j]) {
+          weights[k][j] = sat_incr(weights[k][j]);
         } else {
-          weights[k][i] = sat_decr(weights[k][i]);
+          weights[k][j] = sat_decr(weights[k][j]);
         }
       }
     }
 
-    for (int i = LEN_GHR-1; i >= 1; i--) {
-      ghr[i] = ghr[-1];
+    for (int i = LEN_GHR; i >= 1; i--) {
+      ghr[i] = ghr[i-1];
       v[i] = v[i-1];
     }
     ghr[0] = resolveDir;
