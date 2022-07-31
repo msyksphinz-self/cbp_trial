@@ -17,7 +17,7 @@
 #define PHT_CTR_MAX  3
 #define PHT_CTR_INIT 2
 
-#define HIST_LEN   17
+#define HIST_LEN   16
 
 //NOTE competitors are allowed to change anything in this file include the following two defines
 //ver2 #define FILTER_UPDATES_USING_BTB     0     //if 1 then the BTB updates are filtered for a given branch if its marker is not btbDYN
@@ -31,6 +31,8 @@ class PREDICTOR{
   // The state is defined for Gshare, change for your design
 
  private:
+  static const int pc_offset = 5 + 2;
+  static const int pc_offset_mask = (1 << pc_offset) - 1;
   UINT32  ghr;           // global history register
   UINT32  *pht;          // pattern history table
   UINT32  historyLength; // history length
@@ -70,7 +72,7 @@ PREDICTOR::PREDICTOR(void){
 
   historyLength    = HIST_LEN;
   ghr              = 0;
-  numPhtEntries    = (1<< HIST_LEN);
+  numPhtEntries    = (1<< (HIST_LEN + pc_offset));
 
   pht = new UINT32[numPhtEntries];
 
@@ -114,8 +116,10 @@ PREDICTOR::PREDICTOR(void){
 //NOTE contestants are not allowed to use the btb* information from ver2 of the simulation infrastructure. Interface to this function CAN NOT be changed.
 bool   PREDICTOR::GetPrediction(UINT64 PC){
 
-  UINT32 phtIndex   = (PC^ghr) % (numPhtEntries);
+  UINT32 phtIndex   = ((PC >> pc_offset) ^ ghr) % (1 << HIST_LEN);
+  phtIndex = (phtIndex << pc_offset) + (PC & pc_offset_mask);
   UINT32 phtCounter = pht[phtIndex];
+
 
 //  printf(" ghr: %x index: %x counter: %d prediction: %d\n", ghr, phtIndex, phtCounter, phtCounter > PHT_CTR_MAX/2);
 
@@ -160,7 +164,8 @@ bool   PREDICTOR::GetPrediction(UINT64 PC){
 //NOTE contestants are not allowed to use the btb* information from ver2 of the simulation infrastructure. Interface to this function CAN NOT be changed.
 void  PREDICTOR::UpdatePredictor(UINT64 PC, OpType opType, bool resolveDir, bool predDir, UINT64 branchTarget){
 
-  UINT32 phtIndex   = (PC^ghr) % (numPhtEntries);
+  UINT32 phtIndex   = ((PC >> pc_offset) ^ ghr) % (1 << HIST_LEN);
+  phtIndex = (phtIndex << pc_offset) + (PC & pc_offset_mask);
   UINT32 phtCounter = pht[phtIndex];
 
   if(resolveDir == TAKEN){

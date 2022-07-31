@@ -53,7 +53,8 @@ CPPFLAGS := -O3 -Wall -std=c++11 -Wextra -Winline -Winit-self -Wno-sequence-poin
 
 PROGRAMS := predictor
 
-objects = predictor_bimodal.o main.o
+# objects = predictor.o main.o
+objects = main.o
 
 all: $(PROGRAMS)
 

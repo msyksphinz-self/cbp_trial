@@ -13,8 +13,8 @@ using namespace std;
 #include "utils.h"
 //#include "bt9.h"
 #include "bt9_reader.h"
-//#include "predictor.cc"
-#include "predictor.h"
+// #include "predictor_perceptron.h"
+#include "predictor_pathbased.h"
 
 
 #define COUNTER     unsigned long long
