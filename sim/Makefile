@@ -53,11 +53,13 @@ CPPFLAGS := -O3 -Wall -std=c++11 -Wextra -Winline -Winit-self -Wno-sequence-poin
 
 PROGRAMS := predictor
 
-# objects = predictor.o main.o
+objects = predictor.o main.o
 # objects = main.o
 # objects = predictor_pathbased2.o main.o
 # objects = piecewise_linear_branch_predictor.o main.o
-objects = hashed_perceptron.o main.o
+# objects = hashed_perceptron.o main.o
+objects = tage-sc-l.o main.o
+# objects = tage.o main.o
 
 all: $(PROGRAMS)
 

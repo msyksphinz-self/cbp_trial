@@ -17,13 +17,13 @@ num_parallel_jobs=8
 
 # ./runall.pl -s ../sim/predictor -w random -f  $num_parallel_jobs -d ../results/new_traces
 
-./runall.pl -s ../sim/predictor -w temp -f  $num_parallel_jobs -d ../results/pathbased
+./runall.pl -s ../sim/predictor -w temp -f  $num_parallel_jobs -d ../results/tage-sc-l
 
 ###########  HOW TO GET STATS?  ################
 
 # This scripts creates stats, after all the earlier jobs finish
 
-./getdata.pl -w temp -d ../results/pathbased
+./getdata.pl -w temp -d ../results/tage-sc-l
 
 #./getdata.pl -w all -d ../results/SEZNEC2014.08KB
 
