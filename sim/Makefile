@@ -58,8 +58,9 @@ objects = predictor.o main.o
 # objects = predictor_pathbased2.o main.o
 # objects = piecewise_linear_branch_predictor.o main.o
 # objects = hashed_perceptron.o main.o
-objects = tage-sc-l.o main.o
+# objects = tage-sc-l.o main.o
 # objects = tage.o main.o
+objects = batage_predictor.o main.o
 
 all: $(PROGRAMS)
 

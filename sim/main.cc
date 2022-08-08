@@ -17,7 +17,8 @@ using namespace std;
 // #include "predictor_pathbased.h"
 // #include "piecewise_linear_branch_predictor.h"
 // #include "hashed_perceptron.h"
-#include "predictor.h"
+// #include "predictor.h"
+#include "batage_predictor.h"
 
 #define COUNTER     unsigned long long
 
