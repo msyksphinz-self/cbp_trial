@@ -9,7 +9,15 @@
 
 class PREDICTOR {
 
+  static const int LOCAL_W = 10;
+  static const int LOCAL_LEN = 1 << LOCAL_W;
+  int8_t m_local[LOCAL_LEN];
+
  public:
+
+  inline UINT32 get_index (UINT64 PC) {
+    return (PC >> 2) % LOCAL_LEN;
+  }
 
   PREDICTOR(void);
   bool GetPrediction(UINT64 PC);

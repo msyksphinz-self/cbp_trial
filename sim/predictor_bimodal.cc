@@ -11,6 +11,7 @@ bool
 PREDICTOR::GetPrediction (UINT64 PC)
 {
   UINT32 index = get_index(PC);
+  // printf("prediction index = %d\n", index);
   return m_local[index] >> 1;
 }
 
@@ -26,6 +27,7 @@ PREDICTOR::UpdatePredictor (UINT64 PC, OpType OPTYPE, bool resolveDir,
   } else if (m_local[index] < 0) {
     m_local[index] = 0;
   }
+  // printf("update index = %d, %d\n", index, m_local[index]);
 }
 
 void
