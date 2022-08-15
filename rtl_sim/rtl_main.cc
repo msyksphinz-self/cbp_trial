@@ -231,57 +231,60 @@ int main(int argc, char* argv[])
         predDir = brpred->GetPrediction(PC);
         brpred->UpdatePredictor(PC, opType, branchTaken, predDir, branchTarget);
 
-        // PC Input: Predict Request
-        dut->i_pred_valid = 1;
-        dut->i_pred_pc = PC;
-        dut->i_clk = !dut->i_clk; // Toggle clock
-        dut->eval();
-        tfp->dump(time_counter++);
-        dut->i_clk = !dut->i_clk; // Toggle clock
-        dut->eval();
-        tfp->dump(time_counter++);
+        if (time_counter < 10000) {
 
-        // Predict Response
-        dut->i_pred_valid = 0;
-        dut->i_pred_pc = 0;
-        dut->i_clk = !dut->i_clk; // Toggle clock
-        dut->eval();
-        tfp->dump(time_counter++);
-        bool predDir_rtl = dut->o_pred_taken;
-        dut->i_clk = !dut->i_clk; // Toggle clock
-        dut->eval();
-        tfp->dump(time_counter++);
+          // PC Input: Predict Request
+          dut->i_pred_valid = 1;
+          dut->i_pred_pc = PC;
+          dut->i_clk = !dut->i_clk; // Toggle clock
+          dut->eval();
+          tfp->dump(time_counter++);
+          dut->i_clk = !dut->i_clk; // Toggle clock
+          dut->eval();
+          tfp->dump(time_counter++);
 
-        // printf ("PC=%08llx, RTL=%d, Model=%d, Result=%d\n", PC, predDir_rtl, predDir, branchTaken);
+          // Predict Response
+          dut->i_pred_valid = 0;
+          dut->i_pred_pc = 0;
+          dut->i_clk = !dut->i_clk; // Toggle clock
+          dut->eval();
+          tfp->dump(time_counter++);
+          bool predDir_rtl = dut->o_pred_taken;
+          dut->i_clk = !dut->i_clk; // Toggle clock
+          dut->eval();
+          tfp->dump(time_counter++);
 
-        if (predDir_rtl != predDir) {
-          fprintf (stderr, "Error prediction RTL / Model different! RTL=%d, ISS=%d\n",  predDir_rtl, predDir);
-          dut->final();
-          tfp->close();
-          exit (1);
+          // printf ("PC=%08llx, RTL=%d, Model=%d, Result=%d\n", PC, predDir_rtl, predDir, branchTaken);
+
+          if (predDir_rtl != predDir) {
+            fprintf (stderr, "Error prediction RTL / Model different! RTL=%d, ISS=%d\n",  predDir_rtl, predDir);
+            dut->final();
+            tfp->close();
+            exit (1);
+          }
+
+          // Training
+          dut->i_update_valid = 1;
+          dut->i_update_pc = PC;
+          dut->i_result_taken = branchTaken;
+          dut->i_clk = !dut->i_clk; // Toggle clock
+          dut->eval();
+          tfp->dump(time_counter++);
+          dut->i_clk = !dut->i_clk; // Toggle clock
+          dut->eval();
+          tfp->dump(time_counter++);
+
+          // Training clear
+          dut->i_update_valid = 0;
+          dut->i_update_pc = 0;
+          dut->i_result_taken = 0;
+          dut->i_clk = !dut->i_clk; // Toggle clock
+          dut->eval();
+          tfp->dump(time_counter++);
+          dut->i_clk = !dut->i_clk; // Toggle clock
+          dut->eval();
+          tfp->dump(time_counter++);
         }
-
-        // Training
-        dut->i_update_valid = 1;
-        dut->i_update_pc = PC;
-        dut->i_result_taken = branchTaken;
-        dut->i_clk = !dut->i_clk; // Toggle clock
-        dut->eval();
-        tfp->dump(time_counter++);
-        dut->i_clk = !dut->i_clk; // Toggle clock
-        dut->eval();
-        tfp->dump(time_counter++);
-
-        // Training clear
-        dut->i_update_valid = 0;
-        dut->i_update_pc = 0;
-        dut->i_result_taken = 0;
-        dut->i_clk = !dut->i_clk; // Toggle clock
-        dut->eval();
-        tfp->dump(time_counter++);
-        dut->i_clk = !dut->i_clk; // Toggle clock
-        dut->eval();
-        tfp->dump(time_counter++);
 
         if(predDir != branchTaken){
           numMispred++; // update mispred stats
@@ -351,4 +354,8 @@ int main(int argc, char* argv[])
   //ver2      printf("  MISPRED_PER_1K_INST_BTB_ATSF\t : %10.4f",   1000.0*(double)(numMispred_btbATSF)/(double)(total_instruction_counter));
   //ver2      printf("  MISPRED_PER_1K_INST_BTB_DYN \t : %10.4f",   1000.0*(double)(numMispred_btbDYN)/(double)(total_instruction_counter));
   printf("\n");
+
+  dut->final();
+  tfp->close();
+
 }
