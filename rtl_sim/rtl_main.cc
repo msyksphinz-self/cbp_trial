@@ -6,7 +6,8 @@
 #include "../sim/bt9_reader.h"
 #include "main_utils.h"
 
-#include "../sim/predictor_bimodal.h"
+#include "../sim/predictor_gshare.h"
+// #include "../sim/predictor_bimodal.h"
 
 int main(int argc, char* argv[])
 {

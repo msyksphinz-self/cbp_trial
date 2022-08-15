@@ -36,6 +36,10 @@ VERILATOR_OPTS += -LDFLAGS -lboost_iostreams
 VERILATOR_OPTS += -LDFLAGS "-L$(BOOST)/lib -Wl,-rpath $(BOOST)/lib"
 
 TOP = predictor
+# PREDICTOR_RTL = rtl/bimodal.sv
+# PREDICTOR_SRC = ../sim/predictor_bimodal.cc
+
+PREDICTOR_RTL = rtl/gshare.sv
 
 
 ifndef BOOST
@@ -67,13 +71,12 @@ all: $(PROGRAMS)
 # predictor : $(objects)
 # 	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-sim_predictor: rtl_main.cc rtl/bimodal.sv ../sim/predictor_bimodal.cc
+sim_predictor: rtl_main.cc $(PREDICTOR_RTL) $(PREDICTOR_SRC)
 	verilator --top-module $(TOP) \
 		-o ../sim_predictor \
 		$(VERILATOR_OPTS) \
-		rtl/bimodal.sv \
-		rtl_main.cc \
-		../sim/predictor_bimodal.cc
+		$(PREDICTOR_RTL) $(PREDICTOR_SRC) \
+		rtl_main.cc
 
 dbg: clean
 	$(MAKE) DBG_BUILD=1 all
